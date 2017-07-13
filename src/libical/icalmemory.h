@@ -22,8 +22,16 @@
 #ifndef ICALMEMORY_H
 #define ICALMEMORY_H
 
-/* Tmp buffers are managed by ical. References can be returned to the
-   caller, although the caller will not own the memory. */
+/**
+ * @file icalmemory.h
+ * @brief Memory management from libical.
+ *
+ * Libical manages it's own memory with these functions. These
+ * enable temporary buffers to be returned by library calls
+ * without requiring the user to manually deallocate them.
+ * Temporary memory is kept in a ring buffer and managed
+ * library-internally.
+ */
 
 #include "libical_ical_export.h"
 
