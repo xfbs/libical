@@ -100,7 +100,7 @@ LIBICAL_ICAL_EXPORT struct icaldurationtype icaldurationtype_from_string(const c
 LIBICAL_ICAL_EXPORT int icaldurationtype_as_int(struct icaldurationtype duration);
 
 /**
- * @brief Convert an ::icaldurationtype into the iCal format as string.
+ * @brief Converts an ::icaldurationtype into the iCal format as string.
  * @param The ::icaldurationtype to convert to iCal format
  * @return A string representing @a d in iCal format
  * @sa icaldurationtype_as_ical_string_r()
@@ -126,7 +126,7 @@ LIBICAL_ICAL_EXPORT int icaldurationtype_as_int(struct icaldurationtype duration
 LIBICAL_ICAL_EXPORT char *icaldurationtype_as_ical_string(struct icaldurationtype d);
 
 /**
- * @brief Convert an ::icaldurationtype into the iCal format as string.
+ * @brief Converts an ::icaldurationtype into the iCal format as string.
  * @param The ::icaldurationtype to convert to iCal format
  * @return A string representing @a d in iCal format
  * @sa icaldurationtype_as_ical_string()
@@ -146,14 +146,122 @@ LIBICAL_ICAL_EXPORT char *icaldurationtype_as_ical_string(struct icaldurationtyp
  * ```
  */
 LIBICAL_ICAL_EXPORT char *icaldurationtype_as_ical_string_r(struct icaldurationtype d);
+
+/**
+ * @brief Creates a duration with zero length.
+ * @return An ::icaldurationtype with a zero length
+ * @sa icaldurationtype_is_null_duration()
+ *
+ * ### Usage
+ * ```c
+ * // create null duration
+ * struct icaldurationtype duration;
+ * duration = icaldurationtype_null_duration();
+ *
+ * // make sure it's zero length
+ * assert(duration.days     == 0);
+ * assert(duration.weeks    == 0);
+ * assert(duration.hours    == 0);
+ * assert(duration.minutes  == 0);
+ * assert(duration.seconds  == 0);
+ * assert(icalduration_is_null_duration(duration));
+ * assert(icalduration_as_int(duration) == 0);
+ * ```
+ */
 LIBICAL_ICAL_EXPORT struct icaldurationtype icaldurationtype_null_duration(void);
+
+/**
+ * @brief Creates a bad duration (used to indicate error).
+ * @return A bad duration
+ * @sa icaldurationtype_is_bad_duration()
+ *
+ * ### Usage
+ * ```c
+ * // create bad duration
+ * struct icaldurationtype duration;
+ * duration = icaldurationtype_bad_duration();
+ *
+ * // make sure it's bad
+ * assert(icaldurationtype_is_bad_duration(duration));
+ * ```
+ */
 LIBICAL_ICAL_EXPORT struct icaldurationtype icaldurationtype_bad_duration(void);
+
+/**
+ * @brief Checks if a duration is a null duration.
+ * @param d The duration to check
+ * @return 1 if the duration is a null duration, 0 otherwise
+ * @sa icalduration_null_duration()
+ *
+ * ### Usage
+ * ```
+ * // make null duration
+ * struct icaldurationtype duration;
+ * duration = icaldurationtype_null_duration();
+ *
+ * // check null duration
+ * assert(icaldurationtype_is_null_duration(duration));
+ * ```
+ */
 LIBICAL_ICAL_EXPORT int icaldurationtype_is_null_duration(struct icaldurationtype d);
+
+/**
+ * @brief Checks if a duration is a bad duration.
+ * @param d The duration to check
+ * @return 1 if the duration is a bad duration, 0 otherwise
+ * @sa icalduration_bad_duration()
+ *
+ * ### Usage
+ * ```
+ * // make bad duration
+ * struct icaldurationtype duration;
+ * duration = icaldurationtype_bad_duration();
+ *
+ * // check bad duration
+ * assert(icaldurationtype_is_bad_duration(duration));
+ * ```
+ */
 LIBICAL_ICAL_EXPORT int icaldurationtype_is_bad_duration(struct icaldurationtype d);
 
+/**
+ * @brief Adds a duration to an ::icaltime object and returns the result.
+ * @param t The time object to add the duration to
+ * @param d The duration to add to the time object
+ * @return The new ::icaltimetype which has been added the duration to
+ *
+ * ### Example
+ * ```c
+ * struct icaltimetype time;
+ * struct icaldurationtype duration;
+ *
+ * // create time and duration objects
+ * time = icaltime_today();
+ * duration = icaldurationtype_from_int(60);
+ *
+ * // add the duration to the time object
+ * time = icaltime_add(time, duration);
+ * ```
+ */
 LIBICAL_ICAL_EXPORT struct icaltimetype icaltime_add(struct icaltimetype t,
                                                      struct icaldurationtype d);
 
+/**
+ * @brief Returns the difference between two ::icaltimetype as a duration.
+ * @param t1 The first point in time
+ * @param t2 The second point in time
+ * @return An ::icaldurationtype representing the duration the elapsed between
+ * @a t1 and @a t2
+ *
+ * ### Usage
+ * ```c
+ * struct icaltimetype t1 = icaltime_from_day_of_year(111, 2018);
+ * struct icaltimetype t2 = icaltime_from_day_of_year(112, 2018);
+ * struct icaldurationtype duration;
+ *
+ * // calculate duration between time points
+ * duration = icaltime_subtract(t1, t2);
+ * ```
+ */
 LIBICAL_ICAL_EXPORT struct icaldurationtype icaltime_subtract(struct icaltimetype t1,
                                                               struct icaltimetype t2);
 
