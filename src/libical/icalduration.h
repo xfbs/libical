@@ -23,7 +23,7 @@
 #ifndef ICALDURATION_H
 #define ICALDURATION_H
 
-/*
+/**
  * @file icalduration.h
  * @brief Methods for working with durations in iCal
  */
@@ -67,8 +67,8 @@ LIBICAL_ICAL_EXPORT struct icaldurationtype icaldurationtype_from_int(int t);
  * @return An ::icaldurationtype representing the duration @a dur
  *
  * @par Error handling
- * When given bad input, it sets ::icalerrno to ::ICAL_MALFORMEDDATA_ERROR
- * and returnes icaldurationtype_bad_duration().
+ * When given bad input, it sets ::icalerrno to ::ICAL_MALFORMEDDATA_ERROR and
+ * returnes icaldurationtype_bad_duration().
  *
  * ### Usage
  * ```c
@@ -83,7 +83,7 @@ LIBICAL_ICAL_EXPORT struct icaldurationtype icaldurationtype_from_int(int t);
 LIBICAL_ICAL_EXPORT struct icaldurationtype icaldurationtype_from_string(const char *dur);
 
 /**
- * @brief Convert an ::icaldurationtype into the duration in seconds as `int`.
+ * @brief Converts an ::icaldurationtype into the duration in seconds as `int`.
  * @param duration The duration to convert to seconds
  * @return An `int` representing the duration in seconds
  *
@@ -102,7 +102,7 @@ LIBICAL_ICAL_EXPORT int icaldurationtype_as_int(struct icaldurationtype duration
 /**
  * @brief Converts an ::icaldurationtype into the iCal format as string.
  * @param The ::icaldurationtype to convert to iCal format
- * @return A string representing @a d in iCal format
+ * @return A string representing duration @a d in iCal format
  * @sa icaldurationtype_as_ical_string_r()
  *
  * @par Ownership
@@ -128,7 +128,7 @@ LIBICAL_ICAL_EXPORT char *icaldurationtype_as_ical_string(struct icaldurationtyp
 /**
  * @brief Converts an ::icaldurationtype into the iCal format as string.
  * @param The ::icaldurationtype to convert to iCal format
- * @return A string representing @a d in iCal format
+ * @return A string representing duration @a d in iCal format
  * @sa icaldurationtype_as_ical_string()
  *
  * @par Ownership
