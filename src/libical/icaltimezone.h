@@ -15,6 +15,7 @@
     The Mozilla Public License Version 2.0. You may obtain a copy of
     the License at http://www.mozilla.org/MPL/
 ======================================================================*/
+
 /**
  * @file icaltimezone.h
  * @brief timezone handling routines
@@ -30,19 +31,26 @@
 
 #if !defined(ICALTIMEZONE_DEFINED)
 #define ICALTIMEZONE_DEFINED
-/** @brief An opaque struct representing a timezone.
+/**
+ * @brief An opaque struct representing a timezone.
+ *
  * We declare this here to avoid a circular dependancy.
  */
 typedef struct _icaltimezone icaltimezone;
 #endif
 
-/**
- * @par Creating/Destroying individual icaltimezones.
+/*
+ * Creating/Destroying individual icaltimezones.
  */
 
-/** Creates a new icaltimezone. */
+/**
+ * @brief Creates a new icaltimezone.
+ */
 LIBICAL_ICAL_EXPORT icaltimezone *icaltimezone_new(void);
 
+/**
+ * @brief Copies an icaltimezone object.
+ */
 LIBICAL_ICAL_EXPORT icaltimezone *icaltimezone_copy(icaltimezone *originalzone);
 
 /** Frees all memory used for the icaltimezone. Set free_struct to free the

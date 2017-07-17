@@ -17,7 +17,7 @@
 ======================================================================*/
 //krazy:excludeall=cpp
 
-/** @file icaltimezone.c
+/* @file icaltimezone.c
  *  @brief implementation of timezone handling routines
  **/
 
@@ -152,7 +152,6 @@ const char *icaltimezone_tzid_prefix(void)
     return ical_tzid_prefix;
 }
 
-/** Creates a new icaltimezone. */
 icaltimezone *icaltimezone_new(void)
 {
     icaltimezone *zone;
