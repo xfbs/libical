@@ -18,7 +18,7 @@
 
 /**
  * @file icaltimezone.h
- * @brief timezone handling routines
+ * @brief Timezone handling routines
  */
 
 #ifndef ICALTIMEZONE_H
@@ -44,23 +44,108 @@ typedef struct _icaltimezone icaltimezone;
  */
 
 /**
- * @brief Creates a new icaltimezone.
+ * @brief Creates a new ::icaltimezone.
+ * @return The new ::icaltimezone object.
+ * @sa icaltimezone_free()
+ *
+ * @par Error handling
+ * If it encounters a problem allocating memory, it returns `NULL` and sets
+ * ::icalerrno to ::ICAL_NEWFAILED_ERROR.
+ *
+ * @par Ownership
+ * The returned object is owned by the caller and must be released with
+ * icaltimezone_free() after use.
+ *
+ * ### Usage
+ * ```c
+ * // creates new timezone object
+ * icaltimezone *tz = icaltimezone_new();
+ *
+ * // use the object
+ *
+ * // releases timezone object
+ * icaltimezone_free(tz, true);
+ * ```
  */
 LIBICAL_ICAL_EXPORT icaltimezone *icaltimezone_new(void);
 
 /**
- * @brief Copies an icaltimezone object.
+ * @brief Copies an ::icaltimezone object.
+ * @return A new ::icaltimezone that is a copy of @a originalzone.
+ *
+ * @par Error handling
+ * If it encounters a problem allocating memory, it returns `NULL` and sets
+ * ::icalerrno to ::ICAL_NEWFAILED_ERROR.
+ *
+ * @par Ownership
+ * The returned object is owned by the caller and must be released with
+ * icaltimezone_free() after use.
+ *
+ * FIXME: explain what it copies and that it doesn't copy
+ *
+ * ### Usage
+ * ```c
+ * // creates a new timezone object
+ * icaltimezone *tz = icaltimezone_new();
+ *
+ * // create a copy
+ * icaltimezone *tzcopy = icaltimezone_copy(tz);
+ *
+ * // releases timezone object
+ * icaltimezone_free(tz, true);
+ * icaltimezone_free(tzcopy, true);
+ * ```
  */
 LIBICAL_ICAL_EXPORT icaltimezone *icaltimezone_copy(icaltimezone *originalzone);
 
-/** Frees all memory used for the icaltimezone. Set free_struct to free the
-   icaltimezone struct as well. */
+/**
+ * @brief Frees all memory used for the icaltimezone.
+ * @param zone The object to free
+ * @param free_struct Whether or not it should free the object itself as well or
+ *  only the contents.
+ *
+ * Set free_struct to free the icaltimezone struct as well. 
+ *
+ * @par Ownership
+ * If @a free_struct is `true`, after this call the timezone object is
+ * completely released and no longer owned by the caller. If @a free_struct is
+ * `false`, the object itself still exists after this call and it's ownership
+ * doesn't change. 
+ *
+ * ### Usage
+ * ```c
+ * // creates a new timezone object
+ * icaltimezone *tz = icaltimezone_new();
+ *
+ * // release all the contents of the timezone
+ * icaltimezone_free(tz, false);
+ *
+ * // TODO add better example code
+ *
+ * // release the timezone object itself
+ * icaltimezone_free(tz, true);
+ * ```
+ */
 LIBICAL_ICAL_EXPORT void icaltimezone_free(icaltimezone *zone, int free_struct);
 
-/** Sets the prefix to be used for tzid's generated from system tzdata.
-    Must be globally unique (such as a domain name owned by the developer
-    of the calling application), and begin and end with forward slashes.
-    Do not change or de-allocate the string buffer after calling this.
+/** 
+ * @brief Sets the prefix to be used for time zone IDs generated from system
+ * tzdata.
+ * @param new_prefix The prefix to be used.
+ * @warn This function is not thread safe!
+ *
+ * TODO can this be changed during runtime?
+ *
+ * Sets the prefix to be used for tzid's generated from system tzdata. Must be
+ * globally unique (such as a domain name owned by the developer of the calling
+ * application), and begin and end with forward slashes.  Do not change or
+ * de-allocate the string buffer after calling this.
+ *
+ * @par Ownership
+ * After calling this method, @a new_prefix is owned by libical and must not be
+ * altered or de-allocated by the caller.
+ *
+ * TODO code example
  */
 LIBICAL_ICAL_EXPORT void icaltimezone_set_tzid_prefix(const char *new_prefix);
 
@@ -68,23 +153,68 @@ LIBICAL_ICAL_EXPORT void icaltimezone_set_tzid_prefix(const char *new_prefix);
  * @par Accessing timezones.
  */
 
-/** Free any builtin timezone information **/
+/** 
+ * @brief Free any builtin timezone information
+ * @warn This method is not thread-safe!
+ *
+ * TODO explain
+ */
 LIBICAL_ICAL_EXPORT void icaltimezone_free_builtin_timezones(void);
 
-/** Returns the array of builtin icaltimezones. */
+/** 
+ * @brief Returns the array of builtin icaltimezones. 
+ * @return An icalarray of icaltimezone structs, one for each builtin timezone.
+ *
+ * Returns an icalarray of icaltimezone structs, one for each builtin
+ * timezone.  This will load and parse the zones.tab file to get the
+ * timezone names and their coordinates. It will not load the
+ * VTIMEZONE data for any timezones.
+ *
+ * TODO explain
+ */
 LIBICAL_ICAL_EXPORT icalarray *icaltimezone_get_builtin_timezones(void);
 
-/** Returns a single builtin timezone, given its Olson city name. */
+/** 
+ * @brief Returns a single builtin timezone, given its Olson city name.
+ * @return An icaltimezone representing the built-in timezone with the given
+ *  Olson city name.
+ */
 LIBICAL_ICAL_EXPORT icaltimezone *icaltimezone_get_builtin_timezone(const char *location);
 
-/** Returns a single builtin timezone, given its offset. */
+/**
+ * @brief Returns a single builtin timezone, given its offset.
+ * @param offset The offset from UTC of the timezone to return.
+ * @return The builtin timezone with the given offset and tzname.
+ *
+ * @par Error handling
+ * If @a offset is 0, it returns the `UTC` timezone. If @a tzname is `NULL`, it
+ * returns `NULL`. If the specified timezone can't be found, it returns `NULL`.
+ *
+ * @par Ownership
+ * The builtin timezone object returned by this method is owned by libical and
+ * must not be de-allocated or changed by the user. TODO
+ *
+ * ### Usage
+ * ```c
+ * // get timezone
+ * icaltimezone *tz = icaltimezone_get_builtin_timezone(TODO, "CET/CEST");
+ *
+ * // use timzeon
+ *
+ * // TODO does it need to be deallocated?
+ * ```
+ */
 LIBICAL_ICAL_EXPORT icaltimezone *icaltimezone_get_builtin_timezone_from_offset(int offset,
                                                                                 const char *tzname);
 
-/** Returns a single builtin timezone, given its TZID. */
+/** 
+ * @brief Returns a single builtin timezone, given its TZID.
+ */
 LIBICAL_ICAL_EXPORT icaltimezone *icaltimezone_get_builtin_timezone_from_tzid(const char *tzid);
 
-/** Returns the UTC timezone. */
+/** 
+ * @brief Returns the UTC timezone. 
+ */
 LIBICAL_ICAL_EXPORT icaltimezone *icaltimezone_get_utc_timezone(void);
 
 /** Returns the TZID of a timezone. */
