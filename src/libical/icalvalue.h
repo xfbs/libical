@@ -20,16 +20,87 @@
 #ifndef ICALVALUE_H
 #define ICALVALUE_H
 
+/**
+ * @file icalvalue.h
+ * @brief Files for working with ::icalvalue objects.
+ *
+ * An ::icalvalue object is basically a wrapper object that can represent all
+ * kinds of values that are valid inside an iCal document. These could be binary
+ * data, booleans, dates, datetimes, text, integers, floats, etc.
+ *
+ * The ::icalvalue stores whatever value it has, as well as storing what kind
+ * that value it is, so it can be used in a type-safe manner.
+ */
+
 #include "libical_ical_export.h"
 #include "icalvalueimpl.h"
 
 #define ICAL_BOOLEAN_TRUE  1
 #define ICAL_BOOLEAN_FALSE 0
 
+/**
+ * @brief Creates new ::icalvalue with the given kind.
+ * @param kind The kind of ::icalvalue to create.
+ * @return An ::icalvalue with the given kind.
+ * @sa icalvalue_free()
+ *
+ * @par Error handling
+ * If @a kind is not a valid ::icalvalue_kind, it returns `NULL`. If there was
+ * a problem allocating memory for the new ::icalvalue, it returns `NULL` and
+ * sets ::icalerrno to ::ICAL_NEWFAILED_ERROR.
+ *
+ * @par Ownership
+ * The resulting object is owned by the caller and must be de-allocated with the
+ * appropriate ::icalvalue_free() method after use.
+ *
+ * ### Usage
+ * ```c
+ * // creates new icalvalue
+ * icalvalue *val = icalvalue_new(ICAL_ATTACH_VALUE);
+ *
+ * // use icalvalue
+ *
+ * // deallocate
+ * icalvalue_free(val);
+ * ```
+ */
 LIBICAL_ICAL_EXPORT icalvalue *icalvalue_new(icalvalue_kind kind);
 
+/**
+ * @brief Creates a clone of an ::icalvalue object.
+ * @param The object to clone.
+ * @return A clone of the given @a value.
+ *
+ * @par Error handling
+ * If there is an error allocating the new ::icalvalue object, it returns `NULL`
+ * and sets ::icalerrno to ::ICAL_NEWFAILED_ERROR. If there is an error copying
+ * over the contents of the value, it returns `NULL`.
+ *
+ * @par Ownership
+ * The resulting object is owned by the caller and must be deallocated with the
+ * appropriate ::icalvalue_free() method after use.
+ *
+ * ### Usage
+ * ```c
+ * // create new icalvalue
+ * icalvalue *val = icalvalue_new(ICAL_ATTACH_VALUE);
+ *
+ * // create a copy of the object
+ * icalvalue *cpy = icalvalue_new_clone(val);
+ *
+ * // deallocate values
+ * icalvalue_free(val);
+ * icalvalue_free(cpy);
+ * ```
+ */
 LIBICAL_ICAL_EXPORT icalvalue *icalvalue_new_clone(const icalvalue *value);
 
+/**
+ * @brief Creates a new ::icalvalue with a given kind from a string.
+ * @param kind The kind of value to create.
+ * @param str The string from which to create the value.
+ * @return The value with the given kind from the supplied string.
+ */
 LIBICAL_ICAL_EXPORT icalvalue *icalvalue_new_from_string(icalvalue_kind kind, const char *str);
 
 LIBICAL_ICAL_EXPORT void icalvalue_free(icalvalue *value);
