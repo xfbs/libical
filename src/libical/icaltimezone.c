@@ -1252,7 +1252,7 @@ void icaltimezone_array_free(icalarray *timezones)
  * BUILTIN TIMEZONE HANDLING
  */
 
-/** Returns an icalarray of icaltimezone structs, one for each builtin
+/* Returns an icalarray of icaltimezone structs, one for each builtin
    timezone.  This will load and parse the zones.tab file to get the
    timezone names and their coordinates. It will not load the
    VTIMEZONE data for any timezones. */
@@ -1271,7 +1271,6 @@ void icaltimezone_free_builtin_timezones(void)
     builtin_timezones = 0;
 }
 
-/** Returns a single builtin timezone, given its Olson city name. */
 icaltimezone *icaltimezone_get_builtin_timezone(const char *location)
 {
     icalcomponent *comp;
